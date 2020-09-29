@@ -15,7 +15,7 @@ exports.up = function(knex) {
             .integer('product_id')
             .references('id')
             .inTable('products');
-        table.boolean('stock').notNullable();
+        table.boolean('stock').notNullable().defaultTo(true);
     })
 };
 
