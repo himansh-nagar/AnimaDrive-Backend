@@ -5,6 +5,7 @@ const knex = require('./models/database')
 const passport = require('passport');
 const bodyParser=require('body-parser');
 
+const bcrypt = require('bcrypt')
 
 const port = process.env.PORT || 3000;
 
@@ -29,7 +30,14 @@ app.use('/',signup)
 require('./routes/auth/sigin')(signup,passport,isLoggedIn)
 
 
+const product = express.Router();
+app.use('/products',product)
+require('./routes/products')(product,knex)
+
+const customers = express.Router();
+app.use('/customers',customers)
+require('./routes/customers')(customers,knex,bcrypt)
 
 app.listen(port,()=>{
-    console.log(`app is running on port ${port}`);
+    console.log(`app is running on port at ${port}`);
 })
