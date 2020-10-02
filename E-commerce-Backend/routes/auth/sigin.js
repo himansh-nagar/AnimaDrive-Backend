@@ -1,14 +1,14 @@
 
 module.exports = (signup,passport, isLoggedIn) => {
-    require('./passport-setup')
     signup.get('/failed', (req, res) => {
         res.send('failed to signin')
     })
     signup.get('/pass', (req, res) => {
+        console.log(req.user)
         res.send(`welcome ${req.user.displayName}`)
     })
     signup.get('/google',
-        passport.authenticate('google', { scope: ['profile'] }));
+        passport.authenticate('google', { scope: ['profile','email'] }));
 
     signup.get('/google/callback',
         passport.authenticate('google', { failureRedirect: '/failed' }),
