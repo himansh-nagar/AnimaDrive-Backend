@@ -1,48 +1,53 @@
 const express = require('express');
 const app = express();
-
 const knex = require('./models/database')
 const passport = require('passport');
 const bodyParser=require('body-parser');
 
-const bcrypt = require('bcrypt')
+const cookieParser=require('cookie-parser');
+const session = require('express-session');
+
+
 
 const port = process.env.PORT || 3000;
 
 const isLoggedIn=require('./middleware');
+require('./routes/auth/passport-setup');
 
-const cookieSession = require('cookie-session');
 
-
+app.use(cookieParser());
+app.use(session({ secret: "cats" }));
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cookieSession({
-    name: 'session',
-    keys: ['key1', 'key2']
-  }))
 
 
 let signup = express.Router();
 app.use('/',signup)
-require('./routes/auth/sigin')(signup,passport,isLoggedIn)
+require('./routes/auth/sigin')(signup,passport)
 
 
 const product = express.Router();
 app.use('/products',product)
 require('./routes/products')(product,knex)
 
-const customers = express.Router();
-app.use('/customers',customers)
-require('./routes/customers')(customers,knex,bcrypt)
+
+// Home route
+app.get('/',isLoggedIn,(req,res)=>{
+    console.log(req.user)
+    res.send("welcome to Home Page")
+})
 
 const getProduct_details = express.Router();
 app.use('/product-details',getProduct_details)
 require('./routes/product_details')(getProduct_details,knex)
 
 // admin route but not secure yet 
+
+
+// admin route but not secure yet
 const adminPostProducts = express.Router();
 app.use('/admin/PostProducts',adminPostProducts);
 require('./routes/admin/post_products')(adminPostProducts,knex)
