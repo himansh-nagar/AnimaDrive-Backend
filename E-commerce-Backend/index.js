@@ -42,7 +42,7 @@ const getProduct_details = express.Router();
 app.use('/product-details',getProduct_details)
 require('./routes/product_details')(getProduct_details,knex)
 
-// admin route but not secure yet
+// admin route but not secure yet 
 const adminPostProducts = express.Router();
 app.use('/admin/PostProducts',adminPostProducts);
 require('./routes/admin/post_products')(adminPostProducts,knex)
@@ -58,6 +58,9 @@ app.use('/admin/deleteProduct',adminDeleteProduct)
 require('./routes/admin/delete_product')(adminDeleteProduct,knex)
 
 
+
 app.listen(port,()=>{
     console.log(`app is running on port at ${port}`);
 })
+
+
