@@ -1,13 +1,13 @@
-const knex = require("../models/database");
 
 
-module.exports = (product_details,knex) =>{
+module.exports = (getProduct_details,knex) =>{
     // get product detail
-    product_details.get('/',(req,res)=>{
+    getProduct_details.get('/:prodID',(req,res)=>{
         knex
             .from('product_details')
             .select('*')
+            .where('product_id',req.params.prodID)
             .then(data => res.send(data))
-            .catch(err = console.log(err))
+            .catch(err => console.log(err))
     })
 }
