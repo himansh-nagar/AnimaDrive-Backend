@@ -1,72 +1,66 @@
 const express = require('express');
 const app = express();
 
-const data = require('./data')
+const knex = require('./models/database')
+const passport = require('passport');
+const bodyParser=require('body-parser');
 
-const port = 3000;
+const bcrypt = require('bcrypt')
+
+const port = process.env.PORT || 3000;
+
+const isLoggedIn=require('./middleware');
+
+const cookieSession = require('cookie-session');
+
 
 app.use(express.json())
-app.use(express.urlencoded({
-    extende:true
-}))
-
-// ------------------------------------ GET routes ------------------------------------
-
-// Home route
-app.get('/',(req,res)=>{
-    res.send("welcome to Home Page")
-})
-
-// getting all products
-app.get('/allProducts',(req,res)=>{
-    res.send(data.products)
-})
-
-// products details
-app.get('/productDetail/:id',(req,res)=>{
-    res.send(data.productDetails[req.params.id - 1])
-})
-
-// getting all catagory
-app.get('/catagory',(req,res)=>{
-    res.send(data.CATAGORY)
-})
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json())
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cookieSession({
+    name: 'session',
+    keys: ['key1', 'key2']
+  }))
 
 
-
-// -----------------------------------POST routes-----------------------
-
-// getting products by catogary
-app.post('/catagory',(req,res)=>{
-    const getProducts = [];
-    for (const product of data.products) {
-        if(product.CATAGORY === req.body.CATAGORY){
-            getProducts.push(product)
-        }
-    }
-    res.send(getProducts)
-})
+let signup = express.Router();
+app.use('/',signup)
+require('./routes/auth/sigin')(signup,passport,isLoggedIn)
 
 
-// posting products
-app.post('/postProducts',(req,res)=>{
-    // products
-    console.log(req.body);
-    let product = req.body.product;
-    product.id = data.products.length + 1
+const product = express.Router();
+app.use('/products',product)
+require('./routes/products')(product,knex)
 
-    // product details
-    let productDetail = req.body.productDetail;
-    productDetail.id = data.productDetails.length + 1
-    productDetail.productID = product.id;
+const customers = express.Router();
+app.use('/customers',customers)
+require('./routes/customers')(customers,knex,bcrypt)
 
-    // insert data
-    data.products.push(product)
-    data.productDetails.push(productDetail)
-    res.send(data.products)
-})
+const getProduct_details = express.Router();
+app.use('/product-details',getProduct_details)
+require('./routes/product_details')(getProduct_details,knex)
+
+// admin route but not secure yet 
+const adminPostProducts = express.Router();
+app.use('/admin/PostProducts',adminPostProducts);
+require('./routes/admin/post_products')(adminPostProducts,knex)
+
+// admin route but not secure yet
+const adminUpdateProduct = express.Router();
+app.use('/admin/updateProduct',adminUpdateProduct);
+require('./routes/admin/update_products')(adminUpdateProduct,knex)
+
+// admin route but not secure yet
+const adminDeleteProduct = express.Router();
+app.use('/admin/deleteProduct',adminDeleteProduct)
+require('./routes/admin/delete_product')(adminDeleteProduct,knex)
+
 
 
 app.listen(port,()=>{
-    console.log(`app is running on port ${port}`);
+    console.log(`app is running on port at ${port}`);
 })
+
+
