@@ -1,11 +1,8 @@
 
 module.exports = (signup,passport, isLoggedIn) => {
+    const signInMail=require('../../nodeMailer').signInMail;
     signup.get('/failed', (req, res) => {
-        res.send('failed to signin')
-    })
-    signup.get('/pass', (req, res) => {
-        console.log(req.user)
-        res.send(`welcome ${req.user.displayName}`)
+        res.send({message:'failed to log in'})
     })
     signup.get('/google/auth',
         passport.authenticate('google', { scope: ['profile','email'] }));
@@ -14,6 +11,8 @@ module.exports = (signup,passport, isLoggedIn) => {
         passport.authenticate('google', { failureRedirect: '/failed' }),
         (req, res) => {
             // Successful authentication, redirect home.
-            res.redirect('/pass');
+            console.log(req.user)
+            signInMail(req.user)
+            res.send({message:'user is loged in'});
         });
 }

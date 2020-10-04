@@ -1,15 +1,7 @@
-const nodemailer = require('nodemailer');
-const sendgridTransport = require('nodemailer-sendgrid-transport');
 
-const transporter = nodemailer.createTransport(sendgridTransport({
-    auth : {
-        api_key: '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',
-    }
-}))
-
-module.exports = (placeOrders,knex)=>{
-
-    placeOrders.post('/:prodID',(req,res)=>{
+module.exports = (placeOrders,knex,isLoggedIn)=>{
+    const afterOrder=require('../nodeMailer').afterOrder
+    placeOrders.post('/:prodID',isLoggedIn,(req,res)=>{
         knex("orders")
         .insert({
             firstName:req.body.firstName,
@@ -25,12 +17,8 @@ module.exports = (placeOrders,knex)=>{
         }).returning('*')
         .then(data1 => {
             res.send(data1)
-            return transporter.sendMail({
-                to:data1[0].email,
-                from:'himanshnagar0@gmail.com',
-                subject:'order placed!',
-                html:`<h1>${data1[0].firstName} succusfully placed a order of ${data1[0].total_amount} and order is created at ${data1[0].created_at} you choose payment method ${data1[0].payment_method}</h1>`
-            })  
+            afterOrder(data1)
+            
         })
         .catch(err => console.log(err))
     })

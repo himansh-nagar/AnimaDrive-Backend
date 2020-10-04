@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const isLoggedIn=(req,res,next)=>{
     if(req.user){
         console.log(req.user)
@@ -7,10 +9,14 @@ const isLoggedIn=(req,res,next)=>{
         res.sendStatus(401);
     }       
 }
-
-module.exports=(isLoggedIn)
-
-
-module.exports.isAdmin = (req,res,next) => {
-
+const isAdmin=(req,res,next) =>{
+    console.log(req.user);
+    if(req.user.email === process.env.EMAIL){
+        next()
+    }
+    else{
+        res.sendStaus(401);
+    }
 }
+
+module.exports={isLoggedIn,isAdmin}

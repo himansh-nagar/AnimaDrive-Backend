@@ -1,8 +1,8 @@
 const knex = require("../../models/database");
 
 
-module.exports = (allOrders,knex) =>{
-    allOrders.get('/all',(req,res)=>{
+module.exports = (allOrders,knex,isAdmin) =>{
+    allOrders.get('/all',isAdmin,(req,res)=>{
         knex
         .from('orders')
         .select('*')

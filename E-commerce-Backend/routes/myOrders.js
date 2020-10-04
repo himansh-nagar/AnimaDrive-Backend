@@ -1,11 +1,11 @@
 
 
-module.exports = (myOrder,knex)=>{
-    myOrder.get("/",(req,res)=>{
+module.exports = (myOrder,knex,isLoggedIn)=>{
+    myOrder.get("/",isLoggedIn,(req,res)=>{
         knex
             .from('orders')
             .select('*')
-            .where('customer_id',req.body.ctmrID)
+            .where('email',req.user.email)
             .then(data => res.send(data))
             .catch(err => console.log(err))
     })

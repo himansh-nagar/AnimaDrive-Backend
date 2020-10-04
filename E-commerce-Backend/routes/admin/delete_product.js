@@ -1,8 +1,8 @@
 const knex = require("../../models/database");
 // admin delete product
 
-module.exports = (adminDeleteProduct,knex) =>{
-    adminDeleteProduct.delete('/:prodID',(req,res) => {
+module.exports = (adminDeleteProduct,knex,isAdmin) =>{
+    adminDeleteProduct.delete('/:prodID',isAdmin,(req,res) => {
         knex('product_details')
         .where({ 'product_id': req.params.prodID })
         .del()
