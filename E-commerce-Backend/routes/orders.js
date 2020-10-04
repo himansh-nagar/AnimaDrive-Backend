@@ -1,7 +1,21 @@
 
+<<<<<<< HEAD
 module.exports = (placeOrders,knex,isLoggedIn)=>{
     const afterOrder=require('../nodeMailer').afterOrder
     placeOrders.post('/:prodID',isLoggedIn,(req,res)=>{
+=======
+require('dotenv')
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth : {
+        api_key: process.env.api_key,
+    }
+}))
+
+module.exports = (placeOrders,knex)=>{
+
+    placeOrders.post('/:prodID',(req,res)=>{
+>>>>>>> ae01ec8e5b9c103b815ef10378fc726b1dab01ab
         knex("orders")
         .insert({
             firstName:req.body.firstName,
