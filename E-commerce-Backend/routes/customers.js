@@ -1,18 +1,35 @@
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
-module.exports = (customers,knex,bcrypt) =>{
+require('dotenv');
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth : {
+        api_key: process.env.api_key,
+    }
+}))
+
+module.exports = (customers,knex) =>{
 
     customers.post('/',async (req,res)=>{
-        const bcryptPassword =   await bcrypt.hash(req.body.password,10)
-           
+         
         knex('customers')
             .insert({
-                'name':req.body.name ,
-                'email': req.body.email , 
-                'password' : bcryptPassword,
-                'phone_no': req.body.phone_no
+                'firstName':req.body.firstName ,
+                'lastName': req.body.lastName , 
+                'displayName' : req.body.displayName,
+                'email': req.body.email
             })
+            .returning('*')
             .then(data =>{
+                // console.log(data[0].email);
                 res.send(data)
+                return transporter.sendMail({
+                    to:data[0].email,
+                    from:'himanshnagar0@gmail.com',
+                    subject:'signup succeeded!',
+                    html:`<h1>${data[0].firstName} succusfully signed in green store store</h1>`
+                })                
             })
             .catch(err => console.log(err))
     })
