@@ -1,8 +1,8 @@
 
 // update products
 
-module.exports = (adminUpdateProduct,knex) =>{
-    adminUpdateProduct.put('/:prodID',(req,res)=>{
+module.exports = (adminUpdateProduct,knex,isAdmin) =>{
+    adminUpdateProduct.put('/:prodID',isAdmin,(req,res)=>{
         console.log(req.params.prodID)
         knex('product_details')
             .where({ 'product_id': req.params.prodID })

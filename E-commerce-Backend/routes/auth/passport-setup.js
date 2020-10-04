@@ -1,42 +1,55 @@
 
 const passport = require('passport');
-require('dotenv').config()
+require('dotenv').config();
+const knex = require('../../models/database');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const Users=[]
+const Users = []
 
 passport.serializeUser((user, done) => {
-    done(null, user);
-  });
-  
-  passport.deserializeUser((user, done) => {
-    console.log(user);
-    done(null, user);
-  })
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  console.log(user);
+  done(null, user);
+})
 
 
 passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/google/callback"
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/google/callback"
 },
-    (accessToken, refreshToken, profile, done) => {
-      const isUserExist=Users.find((user)=> user.email===profile._json.email )
-      if(!isUserExist){
-        let user={
-          firstName:profile._json.given_name,
-          lastName:profile._json.family_name,
-          displayName:profile.displayName,
-          googleID: profile.id,
-          email: profile._json.email
+  (accessToken, refreshToken, profile, done) => {
+    console.log('this is user profile',profile)
+    knex('customers')
+      .select('*')
+      .where('email', profile._json.email)
+      .then(data => {
+        if (data.length < 1) {
+          console.log(data)
+          knex('customers')
+            .insert({
+              'firstName': profile._json.given_name,
+              'lastName': profile._json.family_name,
+              'displayName': profile.displayName,
+              'email': profile._json.email
+            })
+            .returning('*')
+            .then(result => {
+              console.log(result);
+              done(null, result[0])
+            })
+            .catch(err => console.log(err))
+
         }
-        console.log(user)
-        Users.push(user)
-       done(null,user)
-      }
-      else{
-        console.log('user is alredy exist');
-         done(null, isUserExist);
-      }
-    }
+        else {
+          console.log('user is alredy exist');
+          done(null, data[0]);
+        }
+      })
+      .catch(err => console.log(err))
+
+  }
 ));
