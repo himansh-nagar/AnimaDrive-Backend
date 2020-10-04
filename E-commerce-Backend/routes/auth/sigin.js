@@ -7,7 +7,7 @@ module.exports = (signup,passport, isLoggedIn) => {
         console.log(req.user)
         res.send(`welcome ${req.user.displayName}`)
     })
-    signup.get('/google',
+    signup.get('/google/auth',
         passport.authenticate('google', { scope: ['profile','email'] }));
 
     signup.get('/google/callback',

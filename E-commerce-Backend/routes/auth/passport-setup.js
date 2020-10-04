@@ -40,4 +40,3 @@ passport.use(new GoogleStrategy({
       }
     }
 ));
-
