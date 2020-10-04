@@ -25,9 +25,9 @@ app.use(cookieSession({
   }))
 
 
-let signup = express.Router();
-app.use('/',signup)
-require('./routes/auth/sigin')(signup,passport,isLoggedIn)
+// let signup = express.Router();
+// app.use('/',signup)
+// require('./routes/auth/sigin')(signup,passport,isLoggedIn)
 
 
 const product = express.Router();
