@@ -11,7 +11,7 @@ module.exports = (adminUpdateProduct,knex,isAdmin) =>{
                 'price':req.body.price,
                 'shot_desc':req.body.shot_desc,
                 'brief_desc':req.body.brief_desc,
-                'thumnail':req.body.thumnail,
+                'thumbnail':req.body.thumbnail,
                 'img1':req.body.img1,
                 'img2':req.body.img2,
                 'img3':req.body.img3,
@@ -28,7 +28,7 @@ module.exports = (adminUpdateProduct,knex,isAdmin) =>{
                     product_name: data[0].product_name,
                     price: data[0].price,
                     shot_desc: data[0].shot_desc,
-                    thumnail: data[0].thumnail,
+                    thumbnail: data[0].thumbnail,
                   })
                   .returning('*')
                   .then(data1 => {

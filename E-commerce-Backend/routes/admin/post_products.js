@@ -1,15 +1,16 @@
-module.exports = (adminPostProducts, knex,isAdmin) => {
-  // post products
+// post products
 
+module.exports = (adminPostProducts, knex,isAdmin) => {
+    
   // make this route secure (only for admins)
 
-  adminPostProducts.post("/",isAdmin, (req, res) => {
+  adminPostProducts.post("/", isAdmin,(req, res) => {
     knex("products")
       .insert({
         product_name: req.body.product_name,
         price: req.body.price,
         shot_desc: req.body.shot_desc,
-        thumnail: req.body.thumnail,
+        thumbnail: req.body.thumbnail,
       })
       .returning('*')
       .then((data) => {
@@ -19,7 +20,7 @@ module.exports = (adminPostProducts, knex,isAdmin) => {
             'price':req.body.price,
             'shot_desc':req.body.shot_desc,
             'brief_desc':req.body.brief_desc,
-            'thumnail':req.body.thumnail,
+            'thumbnail':req.body.thumbnail,
             'img1':req.body.img1,
             'img2':req.body.img2,
             'img3':req.body.img3,

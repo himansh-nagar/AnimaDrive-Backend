@@ -12,6 +12,7 @@ exports.up = function(knex) {
         table.string('payment_method', 255).notNullable();
         table.integer('total_amount').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
+        table.text('cart');
         table
             .integer('product_id')
             .references('id')

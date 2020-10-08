@@ -34,23 +34,11 @@ app.use('/products',product)
 require('./routes/products')(product,knex)
 
 
-
-
 // get details of a product
 const getProduct_details = express.Router();
 app.use('/product-details',getProduct_details)
 require('./routes/product_details')(getProduct_details,knex)
 
-
-// placing a order
-const placeOrder = express.Router();
-app.use('/placeOrder',placeOrder);
-require('./routes/orders')(placeOrder,knex,isLoggedIn)
-
-// get myoder
-const myOrder = express.Router();
-app.use('/myOrders',myOrder);
-require("./routes/myOrders")(myOrder,knex,isLoggedIn)
 
 
 // admin route but not secure yet
@@ -71,7 +59,28 @@ const allOrders = express.Router();
 app.use("/admin/orders",allOrders);
 require("./routes/admin/allOrders")(allOrders,knex,isAdmin)
 
+// placing a order 
+const placeOrder = express.Router();
+app.use('/placeOrder',placeOrder);
+require('./routes/orders')(placeOrder,knex,isLoggedIn)
 
+// get myorder
+const myOrder = express.Router();
+app.use('/myOrders',myOrder);
+require("./routes/myOrders")(myOrder,knex,isLoggedIn)
+
+
+
+// cart routes
+const Cart = express.Router();
+app.use('/cart',Cart);
+require('./routes/Cart')(Cart,knex,isLoggedIn);
+
+
+// temporary route for creating customers
+const customer = express.Router();
+app.use('/customer',customer)
+require('./routes/customers')(customer,knex,isLoggedIn)
 
 
 app.listen(port,()=>{
