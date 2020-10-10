@@ -7,7 +7,7 @@ const isLoggedIn=(req,res,next)=>{
     }
     else{
         res.sendStatus(401);
-    }       
+    }   
 }
 const isAdmin=(req,res,next) =>{
     console.log(req.user);

@@ -7,7 +7,7 @@ exports.up = function(knex) {
         table.integer('price').notNullable();
         table.string('shot_desc', 255).notNullable();
         table.string('brief_desc', 2048).notNullable();
-        table.string('thumnail').notNullable();
+        table.string('thumbnail').notNullable();
         table.string('img1', 1024).notNullable();
         table.string('img2', 1024).notNullable();
         table.string('img3', 1024).notNullable();

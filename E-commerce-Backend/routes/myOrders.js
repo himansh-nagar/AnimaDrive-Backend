@@ -1,12 +1,15 @@
 
 
 module.exports = (myOrder,knex,isLoggedIn)=>{
-    myOrder.get("/",isLoggedIn,(req,res)=>{
+    myOrder.post('/',isLoggedIn,(req,res)=>{
         knex
             .from('orders')
             .select('*')
-            .where('email',req.user.email)
-            .then(data => res.send(data))
+            .where('customer_id',req.body.id)
+            // .groupBy('created_at')
+            .then(data => {
+                res.send(data)
+            })
             .catch(err => console.log(err))
     })
 }
