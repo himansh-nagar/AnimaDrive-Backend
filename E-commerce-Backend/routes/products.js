@@ -5,7 +5,7 @@ module.exports=(product,knex)=>{
         knex
           .from("products")
           .select("*")
-          .then((data) => res.send(data))
+          .then((data) => res.cookie('hi','sushant').send(data))
           .catch((err) => console.log(err));
       });
 }

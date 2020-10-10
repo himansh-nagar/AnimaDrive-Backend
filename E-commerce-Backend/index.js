@@ -3,11 +3,27 @@ const app = express();
 const knex = require('./models/database')
 const passport = require('passport');
 const bodyParser=require('body-parser');
+const cors = require('cors');
+
 
 const cookieParser=require('cookie-parser');
 const session = require('express-session');
+app.use(cors())
+app.use(function(req, res, next) {
 
-
+    //to allow cross domain requests to send cookie information.
+    res.header('Access-Control-Allow-Credentials', true);
+    
+    // origin can not be '*' when crendentials are enabled. so need to set it to the request origin
+    res.header('Access-Control-Allow-Origin',  req.headers.origin);
+    
+    // list of methods that are supported by the server
+    res.header('Access-Control-Allow-Methods','OPTIONS,GET,PUT,POST,DELETE');
+    
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, X-XSRF-TOKEN');
+    
+        next();
+    });
 const port = process.env.PORT || 3000;
 
 const isAdmin=require('./middleware').isAdmin;
@@ -22,6 +38,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(cors());
+
 
 
 let signup = express.Router();

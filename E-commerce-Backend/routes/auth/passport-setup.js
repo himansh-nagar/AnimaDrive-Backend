@@ -11,7 +11,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((user, done) => {
-  console.log(user);
   done(null, user);
 })
 
@@ -22,13 +21,14 @@ passport.use(new GoogleStrategy({
   callbackURL: "http://localhost:3000/google/callback"
 },
   (accessToken, refreshToken, profile, done) => {
-    console.log('this is user profile',profile)
+    // console.log(accessToken)
+    // console.log('this is user profile',profile)
     knex('customers')
       .select('*')
       .where('email', profile._json.email)
       .then(data => {
         if (data.length < 1) {
-          console.log(data)
+          // console.log(data)
           knex('customers')
             .insert({
               'firstName': profile._json.given_name,
@@ -38,7 +38,7 @@ passport.use(new GoogleStrategy({
             })
             .returning('*')
             .then(result => {
-              console.log(result);
+              // console.log(result);
               done(null, result[0])
             })
             .catch(err => console.log(err))
