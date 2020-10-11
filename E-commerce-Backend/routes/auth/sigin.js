@@ -1,7 +1,7 @@
 
 module.exports = (signup, passport, isLoggedIn) => {
     const signInMail = require('../../nodeMailer').signInMail;
-    const CLIENT_HOME_PAGE_URL = "http://localhost:3001";
+    const CLIENT_HOME_PAGE_URL = "http://localhost:3002";
     signup.get('/failed', (req, res) => {
         res.status(401).json({
             success: false,
