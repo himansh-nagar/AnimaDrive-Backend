@@ -8,23 +8,26 @@ const cors = require('cors');
 
 const cookieParser=require('cookie-parser');
 const session = require('express-session');
-app.use(cors())
+app.use(cors());
+
+
 app.use(function(req, res, next) {
 
     //to allow cross domain requests to send cookie information.
+    
     res.header('Access-Control-Allow-Credentials', true);
     
     // origin can not be '*' when crendentials are enabled. so need to set it to the request origin
-    res.header('Access-Control-Allow-Origin',  req.headers.origin);
+    res.header('Access-Control-Allow-Origin',  "http://localhost:3001");
     
     // list of methods that are supported by the server
     res.header('Access-Control-Allow-Methods','OPTIONS,GET,PUT,POST,DELETE');
     
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, X-XSRF-TOKEN');
+    res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, X-XSRF-TOKEN , XMLHttpRequest');
     
         next();
-    });
-const port = process.env.PORT || 3000;
+    }); 
+const port = process.env.PORT || 4000;
 
 const isAdmin=require('./middleware').isAdmin;
 const isLoggedIn=require('./middleware').isLoggedIn;
@@ -38,8 +41,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(cors());
 
+
+// app.options('/placeOrder/main/order', cors())
 
 
 let signup = express.Router();
@@ -80,7 +84,7 @@ require("./routes/admin/allOrders")(allOrders,knex,isAdmin)
 // placing a order 
 const placeOrder = express.Router();
 app.use('/placeOrder',placeOrder);
-require('./routes/orders')(placeOrder,knex,isLoggedIn)
+require('./routes/orders')(placeOrder,knex,isLoggedIn,cors)
 
 // get myorder
 const myOrder = express.Router();

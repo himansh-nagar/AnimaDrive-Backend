@@ -1,9 +1,12 @@
 
 
-module.exports = (placeOrders,knex,isLoggedIn)=>{
+module.exports = (placeOrders,knex,isLoggedIn,cors)=>{
     // const afterOrder=require('../nodeMailer').afterOrder
     // ordering from cart
-    placeOrders.post('/cart/order',isLoggedIn,(req,res)=>{
+    // placeOrders.use(cors({ 
+    //     origin:'http://localhost:3001'
+    // }))
+    placeOrders.post('/cart/order',(req,res)=>{
         knex
         .from("cart")
         .where({"customer_id": 1})
@@ -32,7 +35,9 @@ module.exports = (placeOrders,knex,isLoggedIn)=>{
 
 
     // ordering from buy now
-    placeOrders.post('/main/order',isLoggedIn,(req,res)=>{
+    placeOrders.options('main/order', cors())
+    placeOrders.post('/main/order',(req,res)=>{
+        console.log("heelo apiiiii");
         knex("orders")
         .insert({
             firstName:req.body.firstName,
@@ -47,9 +52,14 @@ module.exports = (placeOrders,knex,isLoggedIn)=>{
             customer_id:req.body.customer_id
         }).returning('*')
         .then(data => {
-            res.send(data)
+            // res.send(data)
+            console.log(data, "demo data");
+            res.send({result:true});
         })
-        .catch(err => console.log(err))
+        .catch((err) =>{
+            console.log(err, "hey error");
+            res.send({result:false});
+        })
     })
 
     // getting cart temporary route

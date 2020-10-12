@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const isLoggedIn=(req,res,next)=>{
+    console.log(req.user,"in logged")
     if(req.user){
         console.log(req.user)
         next()
