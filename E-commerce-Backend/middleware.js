@@ -1,10 +1,18 @@
 require('dotenv').config()
 
 const isLoggedIn=(req,res,next)=>{
-    console.log(req.user,"in logged")
-    if(req.user){
-        console.log(req.user)
-        next()
+    const jwt= require('jsonwebtoken');
+    console.log(req.headers.authorization,"in logged")
+    if(req.headers.authorization){
+        jwt.verify(req.headers.authorization,"sushant",(err,decode)=>{
+            if(!err){
+                req.decode=decode
+                next()
+            }
+            else{
+                res.sendStatus(401);
+            }
+        })
     }
     else{
         res.sendStatus(401);

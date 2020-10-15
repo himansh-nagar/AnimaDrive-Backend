@@ -1,10 +1,11 @@
 const knex = require("../models/database");
 
 module.exports = (Cart, knex,isLoggedIn) => {
-  Cart.post("/addToCart",(req, res) => {
-    knex
+  Cart.post("/addToCart",isLoggedIn,(req, res) => {
+      console.log(req.decode,"yesssss")
+      knex
       .from("cart")
-      .where({'emailId': req.body.email,'product_id':req.body.product_id})
+      .where({'emailId': req.decode.email,'product_id':req.body.product_id})
       .returning("*")
       .then((Item) => {
         // res.send(Item)
@@ -14,7 +15,7 @@ module.exports = (Cart, knex,isLoggedIn) => {
              knex("cart")
                   .where({
                     product_id: Item[0].product_id,
-                    emailId: req.body.email
+                    emailId: req.decode.email
                   })
                   .update({ quantity: Item[0].quantity })
                   .returning("*")
@@ -32,7 +33,7 @@ module.exports = (Cart, knex,isLoggedIn) => {
               thumbnail: req.body.thumbnail,
               quantity: 1,
               product_id: req.body.product_id,
-              emailId: req.body.email
+              emailId: req.decode.email
             })
             .returning("*")
             .then((addedItem) => {res.send(addedItem)
@@ -43,13 +44,14 @@ module.exports = (Cart, knex,isLoggedIn) => {
         }
       })
       .catch((err) => console.log(err));
-  });
+    })
+  
 
 //   get my cart
-  Cart.get('/mycart',(req,res)=>{
+  Cart.get('/mycart',isLoggedIn,(req,res)=>{
     knex
     .from("cart")
-    .where({"emailId": req.query.ID})
+    .where({"emailId": req.decode.email})
     .returning("*")
     .then(cart=> res.send(cart))
     .catch(err=> console.log(err))

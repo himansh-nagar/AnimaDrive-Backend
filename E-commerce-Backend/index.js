@@ -18,12 +18,12 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     
     // origin can not be '*' when crendentials are enabled. so need to set it to the request origin
-    res.header('Access-Control-Allow-Origin',  "http://localhost:3001");
+    res.setHeader('Access-Control-Allow-Origin',  "http://localhost:3000");
     
     // list of methods that are supported by the server
-    res.header('Access-Control-Allow-Methods','OPTIONS,GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
     
-    res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, X-XSRF-TOKEN , XMLHttpRequest');
+    res.header('Access-Control-Allow-Headers', ' Content-Type');
     
         next();
     }); 
@@ -103,6 +103,13 @@ require('./routes/Cart')(Cart,knex,isLoggedIn);
 const customer = express.Router();
 app.use('/customer',customer)
 require('./routes/customers')(customer,knex,isLoggedIn)
+
+//Routes for all forms
+const forms = express.Router();
+app.use('/join',forms)
+require('./routes/forms')(forms)
+
+// todo -Mr.Susuant Bagri catch 404 and forward to error handler
 
 
 app.listen(port,()=>{

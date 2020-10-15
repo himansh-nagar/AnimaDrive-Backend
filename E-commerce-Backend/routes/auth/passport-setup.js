@@ -7,10 +7,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const Users = []
 
 passport.serializeUser((user, done) => {
+  console.log(user)
   done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
+  console.log(user)
   done(null, user);
 })
 
@@ -22,7 +24,8 @@ passport.use(new GoogleStrategy({
 },
   (accessToken, refreshToken, profile, done) => {
     // console.log(accessToken)
-    // console.log('this is user profile',profile)
+
+    console.log('this is user access',accessToken)
     knex('customers')
       .select('*')
       .where('email', profile._json.email)

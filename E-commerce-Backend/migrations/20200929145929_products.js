@@ -3,7 +3,7 @@ exports.up = function (knex) {
     table.increments().primary();
     table.string("product_name", 255).notNullable();
     table.integer("price").notNullable();
-    table.string("shot_desc", 255).notNullable();
+    table.string("shot_desc", 2048).notNullable();
     table.string("thumbnail", 1024).notNullable();
   });
 };

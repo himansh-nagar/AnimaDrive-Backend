@@ -6,8 +6,11 @@ exports.up = function(knex) {
         table.string('firstName', 255);
         table.string('lastName', 255);
         table.string('email', 255);
+        table.integer('mobile').notNullable();
         table.string('address', 1024).notNullable();
         table.integer('pincode').notNullable();
+        table.string('city', 255).notNullable();
+        table.string('state', 255).notNullable();
         table.string('country', 255).notNullable();
         table.string('payment_method', 255).notNullable();
         table.integer('total_amount').notNullable();

@@ -1,7 +1,8 @@
 
 module.exports = (signup, passport, isLoggedIn) => {
+    const jwt = require('jsonwebtoken');
     const signInMail = require('../../nodeMailer').signInMail;
-    const CLIENT_HOME_PAGE_URL = "http://localhost:3001";
+    const CLIENT_HOME_PAGE_URL = "http://localhost:3000";
     signup.get('/failed', (req, res) => {
         res.status(401).json({
             success: false,
@@ -15,14 +16,14 @@ module.exports = (signup, passport, isLoggedIn) => {
     });
 
     signup.get('/authSuccess', (req, res) => {
-        console.log(req.user ,'in authenticate'    )
         if (req.user) {
             console.log(req.user, 'in success')
+            const token = jwt.sign(req.user,"sushant")
             res.status(200).json({
                 success: true,
                 message: "user has successfully authenticated",
                 user: req.user,
-                cookies: req.cookies
+                token: token
             });
         }
         else {
