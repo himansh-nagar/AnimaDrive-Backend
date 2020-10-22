@@ -9,7 +9,7 @@ exports.up = function (knex) {
             .integer('product_id')
             .references('id')
             .inTable('products');
-    table.integer("customer_id").references("id").inTable("customers");
+    table.string("emailId")
   });
 };
 

@@ -4,7 +4,7 @@ module.exports = (adminPostProducts, knex,isAdmin) => {
     
   // make this route secure (only for admins)
 
-  adminPostProducts.post("/", isAdmin,(req, res) => {
+  adminPostProducts.post("/",(req, res) => {
     knex("products")
       .insert({
         product_name: req.body.product_name,
