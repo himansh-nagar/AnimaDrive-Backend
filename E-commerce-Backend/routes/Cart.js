@@ -61,14 +61,16 @@ module.exports = (Cart, knex, isLoggedIn) => {
 
   //update the cart
   Cart.put('/incrimentCart', isLoggedIn, (req, res) => { 
+    const ID = req.body.ID;
     knex('cart')
       .where('emailId', req.decode.email)
+      .where('product_id',ID)
       .select('*')
       .then(data => {
         data[0].quantity++;
         knex('cart')
           .where({
-            product_id: data[0].product_id,
+            product_id: ID,
             emailId: req.decode.email
           }).update({ quantity: data[0].quantity })
           .then(result =>{
@@ -87,23 +89,38 @@ module.exports = (Cart, knex, isLoggedIn) => {
   //update the cart
 
   Cart.put('/decrimentCart', isLoggedIn, (req, res) => {
+    const ID = req.body.ID;
     knex('cart')
       .where('emailId', req.decode.email)
+      .where('product_id',ID)
       .select('*')
       .then(data => {
-        data[0].quantity--;
-        knex('cart')
-          .where({
-            product_id: data[0].product_id,
-            emailId: req.decode.email
-          }).update({ quantity: data[0].quantity })
-          .then(result => {
-            console.log('increment in cart')
-            res.send('cart is updated')
+        if (data[0].quantity>1) {
+          data[0].quantity--;
+          knex('cart')
+            .where({
+              product_id: ID,
+              emailId: req.decode.email
+            }).update({ quantity: data[0].quantity })
+            .then(result => {
+              console.log('increment in cart')
+              res.send('cart is updated')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          knex('cart')
+            .where({
+              product_id: ID,
+              emailId: req.decode.email
+            })
+          .del()
+          .then(data=>{
+            console.log("done")
           })
-          .catch((err) => {
-            console.log(err)
-          })
+          .catch(()=>console.log('there is an error'))
+        }
       })
       .catch(err=>{
         console.log(err);
